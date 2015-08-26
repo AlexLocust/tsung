@@ -348,7 +348,8 @@ repeat | if | change_type | foreach | set_option | interaction )*>
 <!ATTLIST raw
     ack         (global | local | no_ack) #REQUIRED
     datasize CDATA #IMPLIED
-    data     CDATA #IMPLIED>
+    data     CDATA #IMPLIED
+    base64data CDATA #IMPLIED>
 
 <!ELEMENT ldap (attr* | modification*) >
 <!ATTLIST ldap

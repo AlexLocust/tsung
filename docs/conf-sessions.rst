@@ -1210,7 +1210,9 @@ The **ts_raw** plugin allows you to send traffic to any kind of
 TCP/UDP server without any knowledge of the underlying protocol. You can set the data
 by attribute ``data``, or just set a data size by attribute
 ``datasize`` (in this situation, Tsung send ``datasize`` bits of
-zeros). ``data`` and ``datasize`` can be a dynamic values.
+zeros). ``data`` and ``datasize`` can be a dynamic values. Also you can use ``base64data``
+attribute to pass binary data in Base64 encoding. If ``data`` and ``base64data`` specified,
+``data`` will have priority, and ``base64data`` will be ignored.
 
 The only way to control the response from the server is to use the
 ``ack`` attribute (also used by the **jabber** plugin):
@@ -1238,6 +1240,9 @@ The only way to control the response from the server is to use the
 
     <thinktime value="4"/>
     <request> <raw datasize="2048" ack="local"></raw> </request>
+
+    <thinktime value="4"/>
+    <request> <raw base64data="AAECECAwQP/+rQ==" ack="local"></raw> </request>
 
     <transaction name="bye">
       <request> <raw data="BYEBYE" ack="local"></raw> </request>
