@@ -71,16 +71,18 @@ new_session() ->
 %%----------------------------------------------------------------------
 %% Function: get_message/1
 %% Purpose: Build a message/request
-%% Args:    #jabber
+%% Args:    #raw
 %% Returns: binary
 %%----------------------------------------------------------------------
 get_message(#raw{datasize=Size},S) when is_list(Size) ->
     get_message(#raw{datasize=list_to_integer(Size)},S);
 get_message(#raw{datasize=Size},#state_rcv{session=S}) when is_integer(Size), Size > 0 ->
     BitSize = Size*8,
-   {<< 0:BitSize >>,S} ;
-get_message(#raw{data=Data},#state_rcv{session=S})->
-    {base64:decode(Data),S}.
+   {<< 0:BitSize >>,S};
+get_message(#raw{data=Data},#state_rcv{session=S}) when is_list(Data) ->
+    {list_to_binary(Data),S};
+get_message(#raw{base64data=B64data},#state_rcv{session=S})->
+    {base64:decode(B64data),S}.
 %% get_message(data=Data,#state_rcv{session=S})->
 %%     {list_to_binary(Data),S}.
 

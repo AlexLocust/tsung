@@ -54,9 +54,15 @@ parse_config(Element = #xmlElement{name=raw, attributes=Attrs},
                             subst    = SubstFlag, match=MatchRegExp}) ->
     Ack  = ts_config:getAttr(atom,Attrs, ack, no_ack),
     Req = case ts_config:getAttr(string,Attrs, datasize) of
-               [] ->
-                   Data  = ts_config:getAttr(string,Attrs, data),
-                   #raw{data=Data};
+               [] -> 
+                   case ts_config:getAttr(string,Attrs,data) of
+                        [] -> 
+                             B64data = ts_config:getAttr(string,Attrs, base64data),
+                             #raw{base64data=B64data};
+                        _ -> 
+                             Data  = ts_config:getAttr(string,Attrs, data),
+                             #raw{data=Data}
+                   end;
                "%%" ++ Tail  ->
                    #raw{datasize="%%"++Tail};
                _ -> % datasize is not a dynamic variable; must be an integer
