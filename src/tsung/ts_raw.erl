@@ -32,6 +32,7 @@
 
 -behavior(ts_plugin).
 
+-include("ts_macros.hrl").
 -include("ts_profile.hrl").
 -include("ts_raw.hrl").
 
@@ -122,6 +123,18 @@ add_dynparams(_Subst, _DynData, Param, _Host) ->
 %%----------------------------------------------------------------------
 %% Function: subst/1
 %%----------------------------------------------------------------------
+
+-ifndef(PRINT).
+-define(PRINT(Var), io:format("DEBUG: ~p:~p - ~p~n~n ~p~n~n", [?MODULE, ?LINE, ??Var, Var])).
+-endif.
+
+subst(Req=#raw{base64data=Base64data},DynVars) ->
+    NewBase64data = ts_search:subst(Base64data, DynVars),
+    %%    ?PRINT(NewBase64data),.
+        Req#raw{base64data = NewBase64data};
+
 subst(Req=#raw{datasize=Size,data=Data},DynVars) ->
-    Req#raw{datasize = ts_search:subst(Size, DynVars),
-            data= ts_search:subst(Data, DynVars)}.
+    Datasize = ts_search:subst(Size, DynVars),
+    NewData= ts_search:subst(Data, DynVars),
+%%    ?PRINT(NewData),
+    Req#raw{datasize=Datasize, data=NewData}.
