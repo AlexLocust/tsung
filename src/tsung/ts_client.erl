@@ -1166,6 +1166,10 @@ handle_data_msg(Data,State=#state_rcv{dump=Dump,request=Req,id=Id,clienttype=Typ
             end
     end;
 
+handle_data_msg(closed, State=#state_rcv{clienttype=ts_raw}) ->
+        ?LOG("handle_data_msg: ts_raw: connection closed - abort session",?WARN),
+        {State#state_rcv{ack_done = true}, [], true};
+
 handle_data_msg(closed,State) ->
     {State,[]};
 
